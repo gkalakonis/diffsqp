@@ -20,7 +20,7 @@ def main(args):
     sqp_parameters = SqpParameters(
         **{
             ## ADMM ##
-            "admm_max_iter": 150,
+            "admm_max_iter": 50,
             "admm_alpha": 1.6,
             "admm_sigma": 1e-6,
             # Rho related
@@ -46,9 +46,9 @@ def main(args):
             "merit_mu": 1e7,
             "armijo_beta": 1e-3,
             "ls_max_iter": 10,
-            "sqp_cost_eps": 1e-10,
-            "sqp_viol_eps": 1e-10,
-            "check_complementarity": True,
+            "sqp_cost_eps": 1e-2,
+            "sqp_viol_eps": 1e-3,
+            "check_complementarity": False,
             "qp_solver": "lqr",
             "ls_function": "filter",
         }
@@ -177,23 +177,25 @@ def main(args):
         save_solution(solution, args.save, x_des=problem_parameters.x_des)
         log.save_to_json(args.save)
 
-    # import matplotlib.pyplot as plt
-    # from diffsqp.utils.plot import plot_trajectories
-    #
-    # plot_trajectories(solution.x, solution.u)
+    import matplotlib.pyplot as plt
+    from diffsqp.utils.plot import plot_trajectories
+    
+    plot_trajectories(solution.x, solution.u)
     # plt.show()
+    plt.savefig("trajectory.png", dpi=200)
 
     # Animate:
-    # from diffsqp.utils.animate import CartPoleAnimator
-    #
-    # animator = CartPoleAnimator(
-    #     solution.x,
-    #     system_parameters.lp,
-    #     problem_parameters.dt,
-    #     problem_parameters.batch_size,
-    # )
-    # animator.animate(step_size=2)
-    # animator.save(filename="admm.mp4", step_size=2)
+    from diffsqp.utils.animate import CartPoleAnimator
+    
+    animator = CartPoleAnimator(
+        solution.x,
+        system_parameters.lp,
+        problem_parameters.dt,
+        problem_parameters.batch_size,
+    )
+    animator.save(filename="admm.mp4", step_size=2)
+    animator.animate(step_size=2)
+    
 
 
 if __name__ == "__main__":
