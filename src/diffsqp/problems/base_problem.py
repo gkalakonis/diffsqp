@@ -207,7 +207,7 @@ class Problem(ABC):
         lx_f = self.lx(-1, x_f)
         # gx_f = self.gx(-1, x_f)
 
-        l_dir_deriv += torch.einsum("bj,bj->b", lx_k, dx_k)
+        l_dir_deriv += torch.einsum("bj,bj->b", lx_f, dx_f)
         # g_dir_deriv += torch.einsum("bj,bj->b", gx_k, gx_k)
 
         return l_dir_deriv  # , g_dir_deriv
